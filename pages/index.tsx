@@ -9,10 +9,10 @@ const Home: NextPage = () => {
   return (
     <Layout title="홈" /*hasTabBar*/ seoTitle="Home">
       <div className="flex flex-col space-y-5 divide-y">
-        {[1, 1, 1, 1, 1, 1, 1].map((product: any) => (
+        {[1, 1, 1, 1, 1, 1, 1].map((product: any, index) => (
           <Item
             id={product.id}
-            key={product.id}
+            key={index}
             title={product.name}
             price={product.price}
             image={product.image}

@@ -10,10 +10,10 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  const { phone, email, username } = req.body;
+  const { phone, email, username, address } = req.body;
   // const user = phone ? { phone } : email ? { email } : null;
   // if (!user) return res.status(400).json({ ok: false });
-  console.log(phone, email, username);
+  console.log(phone, email, username, address);
 
   const checkPhone = Boolean(
     await client.user.findUnique({

@@ -6,13 +6,15 @@ import useMutation from "@libs/client/useMutation";
 import { User } from "@prisma/client";
 import loadConfig from "next/dist/server/config";
 import { log } from "console";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Post from "@components/Post";
 
 interface LoginForm {
   username: string;
   phone: string;
   email: string;
+  address: string;
   errors?: string;
 }
 interface ResponseForm {
@@ -30,11 +32,17 @@ export default function Forms() {
     setValue,
     reset,
     resetField,
+    getValues,
   } = useForm<LoginForm>({
     mode: "onChange",
   });
   const [form, { loading, data, error }] =
     useMutation<ResponseForm>("/api/users/form");
+
+  const [popup, setPopup] = useState(false);
+  const [address, setAddress] = useState("");
+  const [zonecode, setZonecode] = useState("");
+  const [detail, setDetail] = useState("");
 
   const router = useRouter();
   const onValid = (data: LoginForm) => {
@@ -118,6 +126,29 @@ export default function Forms() {
           {errors.phone?.message ? (
             <div className="text-orange-500">{errors.phone?.message}</div>
           ) : null}
+          <div
+            onClick={() => {
+              setPopup(!popup);
+            }}
+          >
+            🔍︎ 주소 검색
+          </div>
+          {popup && (
+            <Post setZonecode={setZonecode} setAddress={setAddress}></Post>
+          )}
+          {/* <input type="text" value={address} /> */}
+          <Input
+            register={register("address", {
+              required: "주소입력은 필수 입력입니다.",
+            })}
+            type="text"
+            required
+            label="주소"
+            name="address"
+            placeholder=""
+            defaultValue={address}
+          />
+          {/* <Post></Post> */}
           <div className="p-4"></div>
           <Button type="submit" text="회원가입" large={true} />
         </form>
