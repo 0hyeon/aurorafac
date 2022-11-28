@@ -10,7 +10,7 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  const { phone, email, username, address } = req.body;
+  const { phone, email, username, address, detailAddress } = req.body;
   // const user = phone ? { phone } : email ? { email } : null;
   // if (!user) return res.status(400).json({ ok: false });
   console.log(phone, email, username, address);
@@ -47,6 +47,7 @@ async function handler(
       phone,
       email,
       name: username,
+      address: address + " " + detailAddress,
     },
   });
 

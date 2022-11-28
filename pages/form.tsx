@@ -16,6 +16,7 @@ interface LoginForm {
   email: string;
   address: string;
   errors?: string;
+  detailAddress: string;
 }
 interface ResponseForm {
   ok: boolean;
@@ -46,14 +47,18 @@ export default function Forms() {
 
   const router = useRouter();
   const onValid = (data: LoginForm) => {
+    if (data.address == "") {
+      data.address = address;
+    }
+    // console.log(watch("address"));
     if (loading) return;
+
     form(data);
   };
   const onInvalid = (errors: FieldErrors) => {
     console.log("errors : ", errors);
   };
   // setValue("username", "hello"); //초기값 세팅
-
   useEffect(() => {
     if (data && data.error == "이미 가입한 핸드폰번호입니다.") {
       setError("phone", { message: "이미 가입한 핸드폰번호입니다." });
@@ -61,6 +66,7 @@ export default function Forms() {
     if (data && data.error == "이미 가입한 이메일입니다.") {
       setError("email", { message: "이미 가입한 이메일입니다." });
     }
+
     if (data && data.ok == true) {
       alert("회원가입완료");
       router.replace("/enter");
@@ -130,16 +136,31 @@ export default function Forms() {
             onClick={() => {
               setPopup(!popup);
             }}
+            className="text-m mt-14 ml-2 cursor-pointer hover:text-gray-400"
           >
-            🔍︎ 주소 검색
+            🔍︎ 우편번호검색
           </div>
           {popup && (
-            <Post setZonecode={setZonecode} setAddress={setAddress}></Post>
+            <>
+              <Post
+                className="relative"
+                setZonecode={setZonecode}
+                setAddress={setAddress}
+              ></Post>
+              {/* <div
+                onClick={() => {
+                  setPopup(!popup);
+                }}
+                className="absolute z-10"
+              >
+                닫기
+              </div> */}
+            </>
           )}
           {/* <input type="text" value={address} /> */}
           <Input
             register={register("address", {
-              required: "주소입력은 필수 입력입니다.",
+              // required: "주소입력은 필수 입력입니다.",
             })}
             type="text"
             required
@@ -149,6 +170,25 @@ export default function Forms() {
             defaultValue={address}
           />
           {/* <Post></Post> */}
+          <Input
+            register={register("detailAddress", {
+              required: "상세주소입력은 필수 입력입니다.",
+            })}
+            type="text"
+            required
+            label="상세주소"
+            name="detailAddress"
+            placeholder="ex)1층 101호"
+          />
+
+          {errors.address?.message && (
+            <div className="text-orange-500">{errors.address?.message}</div>
+          )}
+          {errors.detailAddress?.message && (
+            <div className="text-orange-500">
+              {errors.detailAddress?.message}
+            </div>
+          )}
           <div className="p-4"></div>
           <Button type="submit" text="회원가입" large={true} />
         </form>
